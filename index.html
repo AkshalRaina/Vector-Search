@@ -1,0 +1,354 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Myntra Products</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* style.css */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: linear-gradient(180deg, #fafafa 0%, #f0f0f0 100%);
+        min-height: 100vh;
+      }
+
+      .header {
+        position: sticky;
+        top: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        padding: 2rem 1rem;
+        z-index: 100;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      }
+
+      .header-content {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        color: #111;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        text-align: center;
+        margin-bottom: 1.25rem;
+      }
+
+      .search-container {
+        background: #fff;
+        border-radius: 12px;
+        padding: 0.35rem;
+        display: flex;
+        gap: 0.5rem;
+        box-shadow:
+          0 2px 12px rgba(0, 0, 0, 0.04),
+          0 0 0 1px rgba(0, 0, 0, 0.05);
+        transition: all 0.25s ease;
+      }
+
+      .search-container:focus-within {
+        box-shadow:
+          0 4px 20px rgba(0, 0, 0, 0.08),
+          0 0 0 2px rgba(0, 0, 0, 0.1);
+      }
+
+      #search-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        padding: 0.875rem 1rem;
+        font-size: 0.95rem;
+        color: #111;
+        outline: none;
+        font-family: inherit;
+      }
+
+      #search-input::placeholder {
+        color: #999;
+      }
+
+      #search-btn {
+        background: #111;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        font-family: inherit;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+
+      #search-btn:hover {
+        background: #333;
+      }
+
+      #search-btn:active {
+        transform: scale(0.98);
+      }
+
+      .main-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 1.5rem 1rem 3rem;
+        min-height: calc(100vh - 140px);
+      }
+
+      .results-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .result-item {
+        background: #fff;
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        position: relative;
+      }
+
+      .result-item:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        border-color: rgba(0, 0, 0, 0.1);
+      }
+
+      .result-id {
+        font-size: 0.7rem;
+        color: #aaa;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        display: block;
+      }
+
+      .result-title {
+        color: #111;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+      }
+
+      .result-description {
+        color: #666;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-bottom: 0.75rem;
+      }
+
+      .result-price {
+        color: #111;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .no-results {
+        text-align: center;
+        color: #888;
+        font-size: 0.95rem;
+        padding: 3rem 1rem;
+      }
+
+      .loading {
+        text-align: center;
+        color: #666;
+        font-size: 0.9rem;
+        padding: 2rem 1rem;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .pagination button {
+        background: #fff;
+        color: #111;
+        border: 1px solid #e0e0e0;
+        padding: 0.5rem 0.875rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+
+      .pagination button:hover:not(:disabled) {
+        background: #111;
+        color: #fff;
+        border-color: #111;
+      }
+
+      .pagination button.active {
+        background: #111;
+        color: #fff;
+        border-color: #111;
+      }
+
+      .pagination button:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 640px) {
+        .header {
+          padding: 1.25rem 0.75rem;
+        }
+        h1 {
+          font-size: 1.25rem;
+          margin-bottom: 1rem;
+        }
+        .search-container {
+          flex-direction: column;
+          gap: 0.375rem;
+        }
+        #search-input {
+          padding: 0.75rem 0.875rem;
+        }
+        #search-btn {
+          width: 100%;
+          padding: 0.75rem;
+        }
+        .main-content {
+          padding: 1rem 0.75rem 2rem;
+        }
+        .result-item {
+          padding: 1rem;
+        }
+        .result-title {
+          font-size: 0.9rem;
+        }
+        .result-description {
+          font-size: 0.8rem;
+        }
+        .result-price {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <h1>Myntra Products</h1>
+        <form class="search-container" id="search-form">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search products..."
+          />
+          <button type="submit" id="search-btn">Search</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="results-container" id="results"></div>
+    </div>
+
+    <script>
+      const searchForm = document.getElementById("search-form");
+      const searchInput = document.getElementById("search-input");
+      const resultsDiv = document.getElementById("results");
+
+      let currentQuery = "";
+      let currentPage = 1;
+
+      async function performSearch(query, page = 1) {
+        if (!query) return;
+
+        currentPage = page; // Update current page globally
+        resultsDiv.innerHTML = '<p class="loading">Searching...</p>';
+
+        try {
+          const response = await fetch("/api/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query, page }),
+          });
+          const data = await response.json();
+          console.log(data);
+          displayResults(data);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } catch (error) {
+          resultsDiv.innerHTML =
+            '<p class="no-results">Error connecting to server</p>';
+        }
+      }
+
+      function displayResults(data) {
+        if (!data.results || data.results.length === 0) {
+          resultsDiv.innerHTML = '<p class="no-results">No results found</p>';
+          return;
+        }
+
+        let html = "";
+        data.results.forEach((product) => {
+          html += `
+                    <div class="result-item">
+                        <span class="result-id">ID: ${product.productId || "N/A"}</span>
+                        <h3 class="result-title">${escapeHtml(product.title)}</h3>
+                        <p class="result-description">${escapeHtml(product.description)}</p>
+                        <span class="result-price">Rs ${product.price}</span>
+                    </div>
+                `;
+        });
+
+        // Fixed pagination concatenation
+        if (data.totalPages > 1) {
+          html += '<div class="pagination">';
+          html += `<button onclick="performSearch('${currentQuery}', ${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>Prev</button>`;
+
+          for (let i = 1; i <= data.totalPages; i++) {
+            html += `<button onclick="performSearch('${currentQuery}', ${i})" class="${i === currentPage ? "active" : ""}">${i}</button>`;
+          }
+
+          html += `<button onclick="performSearch('${currentQuery}', ${currentPage + 1})" ${currentPage === data.totalPages ? "disabled" : ""}>Next</button>`;
+          html += "</div>";
+        }
+
+        resultsDiv.innerHTML = html;
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      searchForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        currentQuery = searchInput.value.trim();
+        performSearch(currentQuery, 1);
+      });
+    </script>
+  </body>
+</html>
